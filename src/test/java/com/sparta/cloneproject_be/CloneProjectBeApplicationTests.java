@@ -1,0 +1,13 @@
+package com.sparta.cloneproject_be;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class CloneProjectBeApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
