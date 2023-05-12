@@ -24,6 +24,11 @@
 //
 //    private final JwtUtil jwtUtil;
 //
+//    private final String[] AUTH_WHITELIST = {
+//        "/swagger-ui/**",
+//        "/v3/api-docs/**"
+//    }
+//
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
@@ -47,6 +52,7 @@
 //
 //        http.authorizeRequests()
 //                .antMatchers("/**").permitAll()
+//                .antMatchers(AUTH_WHITELIST).permitAll()
 //                .anyRequest().authenticated()
 //                // JWT 인증/인가를 사용하기 위한 설정
 //                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
