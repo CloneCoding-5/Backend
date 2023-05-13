@@ -3,6 +3,7 @@ package com.sparta.cloneproject_be.controller;
 import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import com.sparta.cloneproject_be.dto.RoomResponseDto;
 import com.sparta.cloneproject_be.service.RoomService;
+import com.sparta.cloneproject_be.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -21,12 +22,14 @@ import java.util.Map;
 public class RoomController {
 
     private final RoomService roomService;
+    private final S3Uploader s3Uploader;
 
     //숙소 게시글 등록 API
     @PostMapping(value = "/host", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<RoomResponseDto> createPost(@RequestBody RoomRequestDto requestDTO,
-                                                      @RequestParam(value="image") MultipartFile image) throws IOException {
-        return roomService.createPost(requestDTO, image);
+    public ResponseEntity<RoomResponseDto> createPost(@ModelAttribute RoomRequestDto requestDTO,
+                                                      @RequestParam(value="image") List<MultipartFile> images) {
+        List<String> imgPaths = s3Uploader.upload(images);
+        return roomService.createPost(requestDTO, imgPaths);
     }
 
     //숙소 게시글 전체 조회 API

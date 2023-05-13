@@ -1,9 +1,9 @@
 package com.sparta.cloneproject_be.dto;
 
-import com.sparta.cloneproject_be.entity.Amenities;
 import com.sparta.cloneproject_be.entity.RoomImage;
-import com.sparta.cloneproject_be.entity.Room_Amenities;
+import com.sparta.cloneproject_be.entity.RoomAmenities;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -17,7 +17,7 @@ public class RoomRequestDto {
     private String city;
     private int capacity;
     private String roomType;
-    private List<Room_Amenities> amenities;
-    private List<RoomImage> images;
+    private List<RoomAmenities> amenities;
+    private List<MultipartFile> image;
     private Date expiredDate;
 }

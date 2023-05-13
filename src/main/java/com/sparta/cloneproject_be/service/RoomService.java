@@ -1,9 +1,15 @@
 package com.sparta.cloneproject_be.service;
 
+
 import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import com.sparta.cloneproject_be.dto.RoomResponseDto;
 import com.sparta.cloneproject_be.entity.Room;
+import com.sparta.cloneproject_be.entity.RoomImage;
+import com.sparta.cloneproject_be.exception.CustomException;
+import com.sparta.cloneproject_be.exception.ErrorMessage;
+import com.sparta.cloneproject_be.repository.ImageRepository;
 import com.sparta.cloneproject_be.repository.RoomRepository;
+import com.sparta.cloneproject_be.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,10 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+// import static com.sparta.cloneproject_be.exception.ErrorMessage.*;
 
 @Service
 @Slf4j
@@ -26,17 +30,25 @@ import java.util.Map;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final ImageRepository imageRepository;
 
     //숙소 게시글 등록
     @Transactional
-    public ResponseEntity<RoomResponseDto> createPost(RoomRequestDto requestDTO, MultipartFile image) throws IOException {
-//        if(!image.isEmpty()) {
-//            String storedFileName = s3Uploader.upload(image,"images");
-//            Room room = new Room(requestDTO);
-//            room.setImageUrl(storedFileName);
-//        }
-        Room room = roomRepository.save(new Room(requestDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(new RoomResponseDto(room));
+    public ResponseEntity<RoomResponseDto> createPost(RoomRequestDto requestDTO, List<String> imgPaths) {
+        if(!imgPaths.isEmpty()) {
+            Room room = new Room(requestDTO);
+            roomRepository.save(room);
+
+            List<String> imgList = new ArrayList<>();
+            for (String imgUrl : imgPaths) {
+                RoomImage roomImage = new RoomImage(imgUrl, room);
+                imageRepository.save(roomImage);
+                imgList.add(roomImage.getImageUrl());
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(new RoomResponseDto(room));
+        } else {
+            throw new CustomException(HttpStatus.BAD_REQUEST.value(), ErrorMessage.WRONG_INPUT_IMAGE.getMessage());
+        }
     }
 
     //숙소 게시글 전체 조회
@@ -94,4 +106,5 @@ public class RoomService {
 //            return false;
 //        return true;
 //    }
+
 }

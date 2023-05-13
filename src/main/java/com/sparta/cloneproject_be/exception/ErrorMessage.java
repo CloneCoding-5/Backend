@@ -14,6 +14,8 @@ public enum ErrorMessage {
     ALREADY_RESERVED("이미 예약되었습니다."),
     NOT_IMAGE("jpg, jpeg, png 파일만 업로드 가능합니다."),
     BLANK_EXIST("입력되지 않은 값이 있습니다. 모든 항목을 작성해주세요."),
+    IMAGE_UPLOAD_ERROR("이미지 업로드에 실패했습니다."),
+    WRONG_INPUT_IMAGE("이미지가 존재하지 않습니다."),
 
     // 401 Unauthorized
     INVALID_TOKEN("유효하지 않은 토큰입니다."),
@@ -27,9 +29,6 @@ public enum ErrorMessage {
     // 404 NOT FOUND
     UNENROLLED_EMAIL("등록되지 않은 이메일입니다."),
     NON_EXIST_POST("존재하지 않는 게시글입니다.");
-
-
-
 
 
 

@@ -5,13 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Room_Amenities {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "raId")
-    private Long id;
+    @Column(name = "categoryId")
+    private Long categoryId;
+    private String categoryName;
+
+    @OneToMany(mappedBy = "category")
+    private List<RoomCategory> categories = new ArrayList<>();
 }
