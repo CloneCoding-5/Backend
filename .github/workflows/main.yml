@@ -21,11 +21,8 @@ jobs:
         with:
           ref: main
       - run: touch ./src/main/resources/application.properties
-      - run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.properties
-      - uses: actions/upload-artifact@v2
-        with:
-          name: application.properties
-          path: ./src/main/resources/application.properties
+      - run: echo "${{ secrets.AWS_PROPERTIES }}" > ./src/main/resources/application.properties
+      - run: cat ./src/main/resources/application.properties
 
       - name: JDK 17 설치
         uses: actions/setup-java@v3
