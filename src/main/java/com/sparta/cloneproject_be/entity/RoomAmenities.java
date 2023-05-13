@@ -16,11 +16,9 @@ public class RoomAmenities {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "amennityId")
-    private Amenities amenities;
+    private Amenity amenity;
 
 }
