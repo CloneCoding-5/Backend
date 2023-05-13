@@ -47,6 +47,7 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./cloneAirbnb.zip s3://cloneairbnbs3/cloneAirbnb.zip 
         
-      # 배포 그룹으로 애플리케이션 전송
+      # Send application to deployment group
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODE_DEPLOY_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=cloneAirbnb.zip 
+        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=cloneAirbnb.zip
+
