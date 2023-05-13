@@ -44,23 +44,23 @@ dependencies {
     // DevTools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    //RDB
+    // RDB
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // H2
-    runtimeOnly 'com.h2database:h2'
+    // runtimeOnly 'com.h2database:h2'
 
     // valid
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // CORS
     implementation("org.mariadb.jdbc:mariadb-java-client:2.1.2")
+
     // swagger-ui
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
 
     // S3
-//    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {

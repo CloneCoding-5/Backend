@@ -11,12 +11,13 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Amenities {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "amennityId")
-    private Long amennityId;
+    @Column(name = "categoryId")
+    private Long categoryId;
+    private String categoryName;
 
-    @OneToMany(mappedBy = "amenities")
-    private List<RoomAmenities> roomAmenities = new ArrayList<>();
+    @OneToMany(mappedBy = "category")
+    private List<RoomCategory> categories = new ArrayList<>();
 }
