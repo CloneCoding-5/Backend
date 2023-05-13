@@ -25,10 +25,9 @@ public class MainPageService {
 
 //    public ResponseEntity<Map<String, List<MainpageResponseDto>>> getRoomLists(Pageable pageable) {
         public Page<Room> getRoomLists(Pageable pageable) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Sort sort = Sort.by(Sort.Direction.DESC, "roomId");
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        Page<Room> rooms = roomRepository.findAll(pageable);
-        return rooms;
+        return roomRepository.findAll(pageable);
 //        List<Room> rooms = roomRepository.findAll();
 //        List<MainpageResponseDto> allLists = new ArrayList<>();
 //        for(Room post : rooms){

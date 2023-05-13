@@ -34,10 +34,17 @@ public class MainpageController {
 //]
 //}
     ///rooms?page=&category=&region=&checkin=&checkout=&guests=&min_price=&max_price=&room_type=&amenities=
-    @GetMapping("/rooms")
+//    @GetMapping("/rooms")
 //    public  ResponseEntity<Map<String, List<MainpageResponseDto>>> getRoomLists(Pageable pageable){
-    public ResponseEntity<Page<Room>> getRooms(Pageable pageable){
-        return ResponseEntity.ok(mainPageService.getRoomLists(pageable));
+//    public ResponseEntity<Page<Room>> getRooms(Pageable pageable){
+//        return ResponseEntity.ok(mainPageService.getRoomLists(pageable));
+//    }
+    @GetMapping("/rooms")
+    public ResponseEntity<Page<MainpageResponseDto>> getRooms(Pageable pageable){
+        Page<Room> rooms = mainPageService.getRoomLists(pageable);
+        Page<MainpageResponseDto> response = rooms.map(MainpageResponseDto::new);
+        return ResponseEntity.ok(response);
     }
+
 
 }
