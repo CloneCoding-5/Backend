@@ -10,8 +10,8 @@ import javax.validation.constraints.Size;
 @Data
 public class SignupRequestDto {
 
-    @Pattern(regexp = ".*@.*", message = "이메일 양식에 맞지 않습니다.")
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "이메일 양식에 맞지 않습니다.")
     private String email;
 
     @Size(min = 4, max = 15, message = "비밀번호는 8 이상, 15 이하만 가능합니다.")
