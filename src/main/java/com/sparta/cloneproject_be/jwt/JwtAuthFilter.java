@@ -33,7 +33,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
-            System.out.println("info = " + info);
             setAuthentication(info.getSubject());
         }
         filterChain.doFilter(request,response);
