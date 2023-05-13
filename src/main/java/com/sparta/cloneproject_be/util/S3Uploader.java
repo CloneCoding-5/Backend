@@ -50,7 +50,7 @@ public class S3Uploader  {
                         .withCannedAcl(CannedAccessControlList.PublicRead));
                 imgUrlList.add(amazonS3.getUrl(bucket+"/post/image", fileName).toString());
             } catch(IOException e) {
-                throw new CustomException(HttpStatus.BAD_REQUEST.value(), ErrorMessage.IMAGE_UPLOAD_ERROR.getMessage());
+                throw new CustomException(ErrorMessage.IMAGE_UPLOAD_ERROR);
             }
         }
         return imgUrlList;

@@ -1,6 +1,7 @@
 package com.sparta.cloneproject_be.controller;
 
 import com.sparta.cloneproject_be.dto.LoginRequestDto;
+import com.sparta.cloneproject_be.dto.MessageDto;
 import com.sparta.cloneproject_be.dto.SignupRequestDto;
 import com.sparta.cloneproject_be.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,13 @@ public class UserController {
 
     // Sign up
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody SignupRequestDto signupRequestDto){
+    public ResponseEntity<MessageDto> signup(@RequestBody SignupRequestDto signupRequestDto){
         return userService.signup(signupRequestDto);
     }
 
     // Login
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public ResponseEntity<MessageDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
         return userService.login(loginRequestDto, response);
     }
 }

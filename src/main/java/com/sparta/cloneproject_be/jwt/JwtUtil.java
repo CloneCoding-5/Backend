@@ -103,7 +103,7 @@ public class JwtUtil implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByEmail(email);
-        User user = userOptional.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND.value(), ErrorMessage.UNENROLLED_EMAIL.getMessage()));
+        User user = userOptional.orElseThrow(() -> new CustomException(ErrorMessage.UNENROLLED_EMAIL));
         return user;
     }
 

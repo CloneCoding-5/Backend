@@ -47,7 +47,7 @@ public class RoomService {
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(new RoomResponseDto(room));
         } else {
-            throw new CustomException(HttpStatus.BAD_REQUEST.value(), ErrorMessage.WRONG_INPUT_IMAGE.getMessage());
+            throw new CustomException(ErrorMessage.WRONG_INPUT_IMAGE);
         }
     }
 
