@@ -5,8 +5,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +43,12 @@ public class Room {
     private String roomType;
 
     @Column(nullable = false)
-    private Date expiredDate;
+    private LocalDate expiredDate;
+
+    // 호스트
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
     // 편의시설
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
