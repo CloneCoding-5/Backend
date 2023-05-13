@@ -19,5 +19,5 @@ public class Category {
     private String categoryName;
 
     @OneToMany(mappedBy = "category")
-    private List<RoomCategory> categories = new ArrayList<>();
+    private List<RoomCategory> roomCategories = new ArrayList<>();
 }

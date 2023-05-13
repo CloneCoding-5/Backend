@@ -1,6 +1,7 @@
 package com.sparta.cloneproject_be.controller;
 
 import com.sparta.cloneproject_be.dto.LoginRequestDto;
+import com.sparta.cloneproject_be.dto.MessageDto;
 import com.sparta.cloneproject_be.dto.SignupRequestDto;
 import com.sparta.cloneproject_be.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ public class UserController {
     @Operation(summary = "회원가입 API", description = "회원가입")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 가입 완료")})
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody @Valid SignupRequestDto signupRequestDto){
+    public ResponseEntity<MessageDto> signup(@RequestBody SignupRequestDto signupRequestDto){
         return userService.signup(signupRequestDto);
     }
 
@@ -37,7 +38,7 @@ public class UserController {
     @Operation(summary = "로그인 API", description = "로그인 성공시 jwt 토큰을 헤더에 넣어 반환합니다.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "로그인 완료")})
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public ResponseEntity<MessageDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
         return userService.login(loginRequestDto, response);
     }
 }

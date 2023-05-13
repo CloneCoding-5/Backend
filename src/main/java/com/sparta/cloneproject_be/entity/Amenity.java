@@ -1,24 +1,24 @@
 package com.sparta.cloneproject_be.entity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RoomAmenities {
+@NoArgsConstructor
+public class Amenity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "raId")
+    @Column(name = "amenityId")
     private Long id;
 
-    @ManyToOne
-    private Room room;
+    private String amenityName;
 
-    @ManyToOne
-    private Amenity amenity;
-
+    @OneToMany
+    List<RoomAmenities> roomAmenities = new ArrayList<>();
 }

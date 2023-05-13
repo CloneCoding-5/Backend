@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.exception;
 
+import com.sparta.cloneproject_be.dto.MessageDto;
 import com.sparta.cloneproject_be.dto.ExceptionDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {CustomException.class})
-    public ResponseEntity<ExceptionDto> handleCustomException(CustomException ex) {
-        ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage());
-        return ResponseEntity.status(ex.getStatusCode()).body(exceptionDto);
+    public ResponseEntity<MessageDto> handleCustomException(CustomException ex) {
+        MessageDto messageDto = new MessageDto(ex.getErrorMessage().getMessage());
+        int statusCode = ex.getErrorMessage().getStatusCode();
+        return ResponseEntity.status(statusCode).body(messageDto);
     }
 
     // Valid 예외 핸들러 (아이디 패스워드 유효성 검사)
