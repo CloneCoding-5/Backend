@@ -26,6 +26,11 @@ public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
 
+    private final String[] AUTH_WHITELIST = {
+        "/swagger-ui/**",
+        "/v3/api-docs/**"
+    };
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,12 +45,15 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console())
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());               
     }
-
+      
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.cors().and()
+                .csrf().disable();
+      
+              // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
@@ -55,5 +63,4 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
 }
