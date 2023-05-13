@@ -48,4 +48,4 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./cloneAirbnb.zip s3://cloneairbnbs3/cloneAirbnb.zip 
         
       - name: EC2에 배포
-        run: aws deploy create-deployment --application-name ${{ env.AWS_CODE_DEPLOY_APPLICATION }} --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name ${{ env.AWS_CODE_DEPLOY_GROUP }} --s3-location bucket=$AWS_S3_BUCKET,key=cloneAirbnb/$GITHUB_SHA.zip,bundleType=zip
+        run: aws deploy create-deployment --application-name ${{ env.CODE_DEPLOY_APP_NAME }} --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }} --s3-location bucket=$cloneairbnbs3,key=cloneAirbnb/$GITHUB_SHA.zip,bundleType=zip
