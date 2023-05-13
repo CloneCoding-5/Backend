@@ -1,13 +1,12 @@
 package com.sparta.cloneproject_be.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.cloneproject_be.dto.ExceptionDto;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,28 +33,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
+            System.out.println("info = " + info);
             setAuthentication(info.getSubject());
         }
         filterChain.doFilter(request,response);
     }
 
-    public void setAuthentication(String userEmail) {
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = jwtUtil.createAuthentication(userEmail);
-        context.setAuthentication(authentication);
-
-        SecurityContextHolder.setContext(context);
+    public void setAuthentication(String email) {
+        Authentication authentication= jwtUtil.createAuthentication(email);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         try {
-            String json = new ObjectMapper().writeValueAsString(new ExceptionDto(msg));
+            String json = new ObjectMapper().writeValueAsString(ResponseEntity.status(statusCode).body(msg));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
-
 }
