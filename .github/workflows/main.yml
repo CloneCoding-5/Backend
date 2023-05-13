@@ -1,33 +1,54 @@
-# workflow의 이름
-name: CloneAirbnb CI/CD Test
+name: CloneCoding-5 CI/CD  # Workflow 이름
 
-# 해당 workflow가 언제 실행될 것인지에 대한 트리거를 지정
-on:
+on: # Workflow를 자동으로 트리거 하기 위한 이벤트
+  release:
+    types: [push] # push를 하면 자동으로 실행
   push:
-    branches: [ main ] # main branch로 push 될 때 실행됩니다.
-  pull_request:
-    branches: [ main ]  # main branch로 pull request될 때 실행됩니다.
+    branches: [main] # master 브랜치에서 동작
+env:
+  S3_BUCKET_NAME: cloneairbnbs3
+  CODE_DEPLOY_APP_NAME: codeDeploy
+  CODE_DEPLOY_GROUP_NAME: codeDeployGroup
 
-# workflow는 한개 이상의 job을 가지며, 각 job은 여러 step에 따라 단계를 나눌 수 있습니다.
-jobs:
+jobs: # 병렬로 실행되는 작업 단위, 여러 step으로 이루어짐
   build:
-    name: CloneAirbnb
-    # 해당 jobs에서 아래의 steps들이 어떠한 환경에서 실행될 것인지를 지정합니다.
-    runs-on: ubuntu-latest
+
+    runs-on: ubuntu-latest # 스크립트를 작동할 OS
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-     # 작업에서 액세스할 수 있도록 $GITHUB_WORKSPACE에서 저장소를 체크아웃합니다.
-      - uses: actions/checkout@v2
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'zulu'
+    - uses: actions/checkout@v3 # 재사용 가능한 워크플로 파일의 위치 및 버전
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    # ./gradlw 실행 권한 부여
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+      shell: bash
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-        shell: bash
+    # 프로젝트 build
+    - name: Build with Gradle
+      run: ./gradlew clean build -x test
+      shell: bash
       
-      - name: Build with Gradle
-        run: ./gradlew build
-        shell: bash
+    # 프로젝트 압축
+    - name: Make zip file
+      run: zip -r ./cloneairbnb.zip .
+      shell: bash
+    
+    # AWS 권한 확인
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+    
+    # 압축한 프로젝트를 S3로 전송
+    - name: Upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./cloneairbnb.zip s3://$S3_BUCKET_NAME/cloneairbnb.zip 
