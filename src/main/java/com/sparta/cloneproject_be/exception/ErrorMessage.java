@@ -1,6 +1,8 @@
 package com.sparta.cloneproject_be.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorMessage {
@@ -20,10 +22,12 @@ public enum ErrorMessage {
     CANNOT_DELETE_POST("직접 작성한 게시글만 삭제 가능합니다."),
 
     NOT_IMAGE("jpg, jpeg, png 파일만 업로드 가능합니다."),
+    IMAGE_UPLOAD_ERROR("이미지 업로드에 실패했습니다."),
+    WRONG_INPUT_IMAGE("이미지가 존재하지 않습니다."),
+
     BLANK_EXIST("입력되지 않은 값이 있습니다. 모든 항목을 작성해주세요."),
 
     INVALID_TOKEN("유효하지 않은 토큰입니다.");
-
 
     private String message;
 
