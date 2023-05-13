@@ -1,14 +1,23 @@
 package com.sparta.cloneproject_be.jwt;
 
 import com.sparta.cloneproject_be.entity.User;
+import com.sparta.cloneproject_be.exception.CustomException;
+import com.sparta.cloneproject_be.exception.ErrorMessage;
+import com.sparta.cloneproject_be.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -16,13 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtUtil {
+public class JwtUtil implements UserDetailsService {
 
-    @Qualifier("userRepository")
+    private final UserRepository userRepository;
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
@@ -79,15 +89,22 @@ public class JwtUtil {
     }
 
     // 토큰에서 사용자 정보 가져오기
-//    public Claims getUserInfoFromToken(String token) {
-//        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-//    }
-//
-//    // 인증 객체 생성
-//    public Authentication createAuthentication(User user) {
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        return authentication;
-//    }
+    public Claims getUserInfoFromToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    // 인증 객체 생성
+    @Transactional(readOnly = true)
+    public Authentication createAuthentication(String email) {
+        UserDetails userDetails = loadUserByUsername(email);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        User user = userOptional.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND.value(), ErrorMessage.UNENROLLED_EMAIL.getMessage()));
+        return user;
+    }
 
 }

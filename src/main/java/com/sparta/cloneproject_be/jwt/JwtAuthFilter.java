@@ -1,10 +1,13 @@
 package com.sparta.cloneproject_be.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -29,19 +32,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED.value());
                 return;
             }
-//            Claims info = jwtUtil.getUserInfoFromToken(token);
-//            setAuthentication();
+            Claims info = jwtUtil.getUserInfoFromToken(token);
+            System.out.println("info = " + info);
+            setAuthentication(info.getSubject());
         }
         filterChain.doFilter(request,response);
     }
 
-//    public void setAuthentication(User user) {
-//        SecurityContext context = SecurityContextHolder.createEmptyContext();
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-//        context.setAuthentication(authentication);
-//
-//        SecurityContextHolder.setContext(context);
-//    }
+    public void setAuthentication(String email) {
+        Authentication authentication= jwtUtil.createAuthentication(email);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
     public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
         response.setStatus(statusCode);
@@ -53,5 +54,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             log.error(e.getMessage());
         }
     }
-
 }
