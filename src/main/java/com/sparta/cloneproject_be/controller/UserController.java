@@ -30,7 +30,7 @@ public class UserController {
     @Operation(summary = "회원가입 API", description = "회원가입")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 가입 완료")})
     @PostMapping("/signup")
-    public ResponseEntity<MessageDto> signup(@RequestBody SignupRequestDto signupRequestDto){
+    public ResponseEntity<MessageDto> signup(@RequestBody @Valid SignupRequestDto signupRequestDto){
         return userService.signup(signupRequestDto);
     }
 
