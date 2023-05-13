@@ -11,6 +11,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<MessageDto> handleValidException(MethodArgumentNotValidException ex) {
+        // @Pattern 에 default message 설정 완료되면 변경 예정
         MessageDto messageDto = new MessageDto("유효성 검사를 통과하지 못했습니다.");
         return ResponseEntity.status(400).body(messageDto);
     }

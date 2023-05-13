@@ -13,8 +13,8 @@ public class ReserveResponseDto {
     private Long roomId;
 
     public ReserveResponseDto(Reservation reservation) {
-        image = reservation.getRoom().getRoomImages().get(0).getImageUrl();
+        image = reservation.getRoom().getImages().get(0).getImageUrl();
         title = reservation.getRoom().getTitle();
-        roomId = reservation.getRoom().getId();
+        roomId = reservation.getRoom().getRoomId();
     }
 }
