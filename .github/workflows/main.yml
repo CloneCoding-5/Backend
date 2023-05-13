@@ -30,6 +30,10 @@ jobs:
         
       - name: 프로젝트 빌드
         run: ./gradlew clean build -x test
+      # 프로젝트 압축
+      - name: Make zip file
+        run: zip -r ./cloneAirbnb.zip .
+        shell: bash
         
       # AWS 권한 확인
       - name: Configure AWS credentials
