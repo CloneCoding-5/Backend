@@ -14,7 +14,7 @@ public class MainpageResponseDto {
     private Long roomId;
     private String region;
     private List<RoomImage> imageUrl;
-    private String host;  //user랑 room이랑 연관이 되어있는건가?user의 nickname 필요
+    private String host;
     private int price;
 
     public MainpageResponseDto(Room room) {

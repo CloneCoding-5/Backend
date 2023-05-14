@@ -24,10 +24,12 @@ public class MainPageService {
     private final RoomRepository roomRepository;
 
 //    public ResponseEntity<Map<String, List<MainpageResponseDto>>> getRoomLists(Pageable pageable) {
-        public Page<Room> getRoomLists(Pageable pageable) {
+    public Page<MainpageResponseDto> getRoomLists(Pageable pageable) {
         Sort sort = Sort.by(Sort.Direction.DESC, "roomId");
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        return roomRepository.findAll(pageable);
+        pageable = PageRequest.of(0, pageable.getPageSize());
+        Page<Room> rooms = roomRepository.findAll(pageable);
+        return rooms.map(MainpageResponseDto::new);
+    }
 //        List<Room> rooms = roomRepository.findAll();
 //        List<MainpageResponseDto> allLists = new ArrayList<>();
 //        for(Room post : rooms){
@@ -36,5 +38,5 @@ public class MainPageService {
 //        Map<String, List<MainpageResponseDto>> result = new HashMap<>();
 //        result.put("roomList", allLists);
 //        return ResponseEntity.ok().body(result);
-    }
+
 }
