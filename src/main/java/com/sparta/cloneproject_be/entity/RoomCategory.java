@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class RoomCategory {
 
     @ManyToOne
     @JoinColumn(name = "roomId")
+    @JsonBackReference
     private Room room;
 
     @ManyToOne
