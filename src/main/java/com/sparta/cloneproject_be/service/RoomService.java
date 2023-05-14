@@ -70,11 +70,11 @@ public class RoomService {
     @Transactional
     public ResponseEntity<RoomResponseDto> updatePost(Long roomId, RoomRequestDto requestDTO, User user) {
 
-        // 게시글 존재 유무체크
+        // 게시글이 존재하는지 확인
         Room room = isRoomExist(roomId);
-        // 게시글 작성자와, 유저 매치 체크
+        // 게시글 작성자와 수정하려는 사용자가 같은치 체크
         if(checkAuthorIdMatch(room, user)){
-            //throw new CustomException(WRITER_ONLY_MODIFY);
+            throw new CustomException(ErrorMessage.CANNOT_UPDATE_POST);
         }
 
         room.update(requestDTO);
@@ -84,11 +84,11 @@ public class RoomService {
     //숙소 게시글 삭제
     @Transactional
     public ResponseEntity<String> deletePost(@PathVariable Long roomId, User user) {
-        // 게시글 존재 유무체크
+        // 게시글이 존재하는지 확인
         Room room = isRoomExist(roomId);
-        // 게시글 작성자와, 유저 매치 체크
+        // 게시글 작성자와 삭제하려는 사용자가 같은지 체크
         if(checkAuthorIdMatch(room, user)) {
-            //throw new CustomException(WRITER_ONLY_DELETE);
+            throw new CustomException(ErrorMessage.CANNOT_DELETE_POST);
         }
         roomRepository.delete(room);
         return ResponseEntity.status(HttpStatus.OK).body("게시글 식제 성공");
