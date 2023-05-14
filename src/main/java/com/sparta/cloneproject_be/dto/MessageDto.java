@@ -3,10 +3,10 @@ package com.sparta.cloneproject_be.dto;
 import lombok.Getter;
 
 @Getter
-public class ExceptionDto {
+public class MessageDto {
     String message;
 
-    public ExceptionDto(String message) {
+    public MessageDto(String message) {
         this.message = message;
     }
 }
