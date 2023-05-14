@@ -5,6 +5,7 @@ import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import com.sparta.cloneproject_be.dto.RoomResponseDto;
 import com.sparta.cloneproject_be.entity.Room;
 import com.sparta.cloneproject_be.entity.RoomImage;
+import com.sparta.cloneproject_be.entity.User;
 import com.sparta.cloneproject_be.exception.CustomException;
 import com.sparta.cloneproject_be.exception.ErrorMessage;
 import com.sparta.cloneproject_be.repository.ImageRepository;
@@ -34,7 +35,7 @@ public class RoomService {
 
     //숙소 게시글 등록
     @Transactional
-    public ResponseEntity<RoomResponseDto> createPost(RoomRequestDto requestDTO, List<String> imgPaths) {
+    public ResponseEntity<RoomResponseDto> createPost(RoomRequestDto requestDTO, List<String> imgPaths, User user) {
         if(!imgPaths.isEmpty()) {
             Room room = new Room(requestDTO);
             roomRepository.save(room);
@@ -67,13 +68,14 @@ public class RoomService {
 
     //숙소 게시글 수정
     @Transactional
-    public ResponseEntity<RoomResponseDto> updatePost(Long roomId, RoomRequestDto requestDTO) {
+    public ResponseEntity<RoomResponseDto> updatePost(Long roomId, RoomRequestDto requestDTO, User user) {
+
         // 게시글 존재 유무체크
         Room room = isRoomExist(roomId);
         // 게시글 작성자와, 유저 매치 체크
-//        if(checkAuthorIdMatch(room)){
-//            throw new CustomException(WRITER_ONLY_MODIFY);
-//        }
+        if(checkAuthorIdMatch(room, user)){
+            //throw new CustomException(WRITER_ONLY_MODIFY);
+        }
 
         room.update(requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(new RoomResponseDto(room));
@@ -81,13 +83,13 @@ public class RoomService {
 
     //숙소 게시글 삭제
     @Transactional
-    public ResponseEntity<String> deletePost(@PathVariable Long roomId) {
+    public ResponseEntity<String> deletePost(@PathVariable Long roomId, User user) {
         // 게시글 존재 유무체크
         Room room = isRoomExist(roomId);
         // 게시글 작성자와, 유저 매치 체크
-//        if(checkAuthorIdMatch(post, user)) {
-//            throw new CustomException(WRITER_ONLY_DELETE);
-//        }
+        if(checkAuthorIdMatch(room, user)) {
+            //throw new CustomException(WRITER_ONLY_DELETE);
+        }
         roomRepository.delete(room);
         return ResponseEntity.status(HttpStatus.OK).body("게시글 식제 성공");
     }
@@ -96,15 +98,15 @@ public class RoomService {
     // id를 매개변수로 받아서 id에 대응되는 게시글이 존재하는지 체크하는 메서드
     private Room isRoomExist(Long id){
         return roomRepository.findById(id).orElseThrow(
-                () -> new NullPointerException("error")
+                () -> new CustomException(ErrorMessage.NON_EXIST_POST)
         );
     }
 
     // 게시글과 게시글을 변경하려는 요청을 보낸 유저가 일치하는지 여부 체크 default return value : true
-//    private boolean checkAuthorIdMatch(Room room, User user){
-//        if(room.getUser().getUsername().equals(user.getUsername()))
-//            return false;
-//        return true;
-//    }
+    private boolean checkAuthorIdMatch(Room room, User user){
+        if(room.getUser().getUsername().equals(user.getUsername()))
+            return false;
+        return true;
+    }
 
 }
