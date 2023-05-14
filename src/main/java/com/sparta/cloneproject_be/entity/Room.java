@@ -66,7 +66,6 @@ public class Room {
     @JsonManagedReference
     private List<RoomCategory> categories = new ArrayList<>();
 
-
     public Room(RoomRequestDto roomRequestDto) {
         this.title = roomRequestDto.getTitle();
         this.price = roomRequestDto.getPrice();
