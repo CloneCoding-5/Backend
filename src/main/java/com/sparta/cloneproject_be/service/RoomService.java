@@ -98,7 +98,7 @@ public class RoomService {
     // id를 매개변수로 받아서 id에 대응되는 게시글이 존재하는지 체크하는 메서드
     private Room isRoomExist(Long id){
         return roomRepository.findById(id).orElseThrow(
-                () -> new CustomException(HttpStatus.NOT_FOUND.value(), ErrorMessage.NON_EXIST_POST.getMessage())
+                () -> new CustomException(ErrorMessage.NON_EXIST_POST)
         );
     }
 

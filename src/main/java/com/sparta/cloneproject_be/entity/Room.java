@@ -62,11 +62,6 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
     private List<RoomCategory> categories = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
-
-
     public Room(RoomRequestDto roomRequestDto) {
         this.title = roomRequestDto.getTitle();
         this.price = roomRequestDto.getPrice();
