@@ -63,7 +63,6 @@ public class Room {
 
     // 카테고리
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
     private List<RoomCategory> categories = new ArrayList<>();
 
     public Room(RoomRequestDto roomRequestDto) {

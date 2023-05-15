@@ -18,13 +18,10 @@ public class RoomCategory {
 
     @ManyToOne
     @JoinColumn(name = "roomId")
-    @JsonBackReference
     private Room room;
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private Category category;
-
-
 
 }
