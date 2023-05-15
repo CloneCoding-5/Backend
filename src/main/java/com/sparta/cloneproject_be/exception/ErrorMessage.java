@@ -16,6 +16,7 @@ public enum ErrorMessage {
     UNENROLLED_EMAIL("등록되지 않은 이메일입니다.", 400),
     BLANK_EXIST("입력되지 않은 값이 있습니다. 모든 항목을 작성해주세요.", 400),
     WRONG_INPUT_IMAGE("이미지가 존재하지 않습니다.", 400),
+    OVER_ROOM_CAPACITY("숙박 가능 인원을 초과했습니다.", 400),
 
     // 401 Unauthorized
     INVALID_TOKEN("유효하지 않은 토큰입니다.", 401),

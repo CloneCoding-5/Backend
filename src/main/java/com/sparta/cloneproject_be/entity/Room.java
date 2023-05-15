@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -52,16 +53,18 @@ public class Room {
 
     // 편의시설
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<RoomAmenities> roomAmenities = new ArrayList<>();
 
     // 이미지
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<RoomImage> images = new ArrayList<>();
 
     // 카테고리
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<RoomCategory> categories = new ArrayList<>();
-
 
     public Room(RoomRequestDto roomRequestDto) {
         this.title = roomRequestDto.getTitle();
