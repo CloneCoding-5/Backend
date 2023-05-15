@@ -22,13 +22,14 @@ public enum ErrorMessage {
     INVALID_TOKEN("유효하지 않은 토큰입니다.", 401),
 
     // 403 FORBIDDEN
-    CANNOT_DELETE_WISHLIST("직접 찜한 위시리트만 삭제 가능합니다.", 403),
+    CANNOT_DELETE_WISHLIST("직접 찜한 위시리스트만 삭제 가능합니다.", 403),
     CANNOT_CANCLE_RESERVATION("직접 등록한 예약만 취소 가능합니다.", 403),
     CANNOT_UPDATE_POST("직접 작성한 게시글만 수정 가능합니다.", 403),
     CANNOT_DELETE_POST("직접 작성한 게시글만 삭제 가능합니다.", 403),
 
     // 404 NOT FOUND
     NON_EXIST_POST("존재하지 않는 게시글입니다.", 404),
+    NON_EXIST_WISHLIST("존재하지 않는 위시리스트입니다.", 404),
 
     // 500 INTERNAL SERVER ERROR
     IMAGE_UPLOAD_ERROR("이미지 업로드에 실패했습니다.", 500);

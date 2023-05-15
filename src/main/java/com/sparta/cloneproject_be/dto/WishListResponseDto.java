@@ -1,6 +1,5 @@
 package com.sparta.cloneproject_be.dto;
 
-import com.sparta.cloneproject_be.entity.WishList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,9 +11,9 @@ public class WishListResponseDto {
     private String wishListName;
     private Long roomId;
 
-    public WishListResponseDto(WishList wishList){
-        this.image = wishList.getRoom().getImages().stream().limit(1).toString();
-        this.wishListName = wishList.getWishListName();
-        this.roomId = wishList.getRoom().getRoomId();
+    public WishListResponseDto(String image, String wishListName, Long roomId){
+        this.image = image;
+        this.wishListName = wishListName;
+        this.roomId = roomId;
     }
 }
