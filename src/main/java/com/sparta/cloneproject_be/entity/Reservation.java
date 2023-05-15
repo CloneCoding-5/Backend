@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.entity;
 
+import com.sparta.cloneproject_be.dto.ReservationRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -30,4 +31,12 @@ public class Reservation {
     private LocalDate checkOut;
 
     private Integer guests;
+
+    public Reservation(ReservationRequestDto reservationRequestDto, Room room, User user) {
+        this.checkIn = reservationRequestDto.getCheckIn();
+        this.checkOut = reservationRequestDto.getCheckOut();
+        this.guests = reservationRequestDto.getGuests();
+        this.room = room;
+        this.user = user;
+    }
 }
