@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class RoomImage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Room room;
 
     public RoomImage(String imageUrl, Room room) {
