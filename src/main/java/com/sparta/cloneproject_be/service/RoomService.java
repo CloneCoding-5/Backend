@@ -1,28 +1,28 @@
 package com.sparta.cloneproject_be.service;
 
 
+import com.sparta.cloneproject_be.dto.RoomDetailResponseDto;
 import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import com.sparta.cloneproject_be.dto.RoomResponseDto;
+import com.sparta.cloneproject_be.entity.Reservation;
 import com.sparta.cloneproject_be.entity.Room;
 import com.sparta.cloneproject_be.entity.RoomImage;
 import com.sparta.cloneproject_be.exception.CustomException;
 import com.sparta.cloneproject_be.exception.ErrorMessage;
 import com.sparta.cloneproject_be.repository.ImageRepository;
+import com.sparta.cloneproject_be.repository.ReserveRepository;
 import com.sparta.cloneproject_be.repository.RoomRepository;
-import com.sparta.cloneproject_be.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.*;
-// import static com.sparta.cloneproject_be.exception.ErrorMessage.*;
 
 @Service
 @Slf4j
@@ -31,6 +31,7 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final ImageRepository imageRepository;
+    private final ReserveRepository reserveRepository;
 
     //숙소 게시글 등록
     @Transactional
@@ -92,12 +93,50 @@ public class RoomService {
         return ResponseEntity.status(HttpStatus.OK).body("게시글 식제 성공");
     }
 
+    // 숙소 상세 페이지 데이터
+    public ResponseEntity<RoomDetailResponseDto> getRoomDetails(Long roomId) {
+        Room room = isRoomExist(roomId);
+        List<LocalDate> enableDates = getEnableDates(room).stream().toList();
+        RoomDetailResponseDto roomDetailResponseDto = new RoomDetailResponseDto(room, enableDates);
+
+        return ResponseEntity.ok(roomDetailResponseDto);
+    }
 
     // id를 매개변수로 받아서 id에 대응되는 게시글이 존재하는지 체크하는 메서드
+
     private Room isRoomExist(Long id){
         return roomRepository.findById(id).orElseThrow(
-                () -> new NullPointerException("error")
+                () -> new CustomException(ErrorMessage.NON_EXIST_POST)
         );
+    }
+
+    // enableDates 계산기
+    private Set<LocalDate> getEnableDates(Room room) {
+        List<Reservation> reservations = reserveRepository.findAllByRoomAfterDate(room, LocalDate.now());
+        LocalDate expiredDate = room.getExpiredDate();
+
+        Set<LocalDate> enableDates = getBetweenDates(LocalDate.now(), expiredDate); // List 와 Set 의 contains 메소드 차이 확인하기
+
+        // 2중포문 말고 다른 방법으로 할 수 있을지 고민해보기
+        for (Reservation reservation : reservations) {
+            Set<LocalDate> datesBetweenInAndOut = getBetweenDates(reservation.getCheckIn(), reservation.getCheckOut());
+            for (LocalDate date : datesBetweenInAndOut) {
+                enableDates.remove(date);
+            }
+        }
+
+        return enableDates;
+    }
+
+    // 두 날짜 사이(경계 포함)의 날짜들을 반환하는 메서드
+    private Set<LocalDate> getBetweenDates(LocalDate from, LocalDate to) {
+        Set<LocalDate> betweenDates = new LinkedHashSet<>();
+
+        int betweenFromTo = (int)Duration.between(from.atStartOfDay(), to.atStartOfDay()).toDays();
+        for (int i = 0; i <= betweenFromTo; i++) {
+            betweenDates.add(from.plusDays(i));
+        }
+        return betweenDates;
     }
 
     // 게시글과 게시글을 변경하려는 요청을 보낸 유저가 일치하는지 여부 체크 default return value : true
