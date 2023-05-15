@@ -40,13 +40,15 @@ public class RoomService {
             Room room = new Room(requestDTO);
             roomRepository.save(room);
 
-            List<String> imgList = new ArrayList<>();
+            List<RoomImage> imgList = new ArrayList<>();
             for (String imgUrl : imgPaths) {
                 RoomImage roomImage = new RoomImage(imgUrl, room);
                 imageRepository.save(roomImage);
-                imgList.add(roomImage.getImageUrl());
+                imgList.add(roomImage);
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(new RoomResponseDto(room));
+            room.setImages(imgList);
+            RoomResponseDto responseDto = new RoomResponseDto(room);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
         } else {
             throw new CustomException(ErrorMessage.WRONG_INPUT_IMAGE);
         }
