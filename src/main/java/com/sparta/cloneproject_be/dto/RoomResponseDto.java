@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 public class RoomResponseDto {
 
     private Long roomId;
-    private List<RoomImage> imageUrl;
+    private List<String> imageUrl;
     private String title;
 
     public RoomResponseDto(Room room) {
         this.roomId = room.getRoomId();
-        this.imageUrl = room.getImages();
+        this.imageUrl = room.getImages().stream()
+                .map(RoomImage::getImageUrl)
+                .collect(Collectors.toList());
         this.title = room.getTitle();
     }
 }

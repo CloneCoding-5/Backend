@@ -46,9 +46,9 @@ public class S3Uploader  {
             objectMetadata.setContentType(file.getContentType());
 
             try(InputStream inputStream = file.getInputStream()) {
-                amazonS3.putObject(new PutObjectRequest(bucket+"/post/image", fileName, inputStream, objectMetadata)
+                amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
-                imgUrlList.add(amazonS3.getUrl(bucket+"/post/image", fileName).toString());
+                imgUrlList.add(amazonS3.getUrl(bucket, fileName).toString());
             } catch(IOException e) {
                 throw new CustomException(ErrorMessage.IMAGE_UPLOAD_ERROR);
             }
@@ -64,7 +64,7 @@ public class S3Uploader  {
     // 파일 유효성 검사
     private String getFileExtension(String fileName) {
         if (fileName.length() == 0) {
-            //throw new CustomException(NOT_IMAGE);
+            throw new CustomException(ErrorMessage.NOT_IMAGE);
         }
         ArrayList<String> fileValidate = new ArrayList<>();
         fileValidate.add(".jpg");
@@ -75,7 +75,7 @@ public class S3Uploader  {
         fileValidate.add(".PNG");
         String idxFileName = fileName.substring(fileName.lastIndexOf("."));
         if (!fileValidate.contains(idxFileName)) {
-            //throw new CustomException(WRONG_IMAGE_FORMAT);
+            throw new CustomException(ErrorMessage.NOT_IMAGE);
         }
         return fileName.substring(fileName.lastIndexOf("."));
     }
