@@ -13,13 +13,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/rooms")
 @RequiredArgsConstructor
 public class RoomController {
 
@@ -28,10 +27,10 @@ public class RoomController {
 
     //숙소 게시글 등록 API
     @PostMapping(value = "/host", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<RoomResponseDto> createPost(@ModelAttribute RoomRequestDto requestDTO,
-                                                      @RequestParam(value="image") List<MultipartFile> images,
+    public ResponseEntity<RoomResponseDto> createPost(@RequestPart("content") RoomRequestDto requestDTO,
+                                                      @RequestPart("image") List<MultipartFile> multipartFile,
                                                       @AuthenticationPrincipal User user) {
-        List<String> imgPaths = s3Uploader.upload(images);
+        List<String> imgPaths = s3Uploader.upload(multipartFile);
         return roomService.createPost(requestDTO, imgPaths, user);
     }
 
@@ -50,7 +49,7 @@ public class RoomController {
     }
 
     //숙소 게시글 삭제 API
-    @DeleteMapping("/posts/{roomId}")
+    @DeleteMapping("/host/{roomId}")
     public ResponseEntity<String> deletePost(@PathVariable Long roomId, @AuthenticationPrincipal User user) {
         return roomService.deletePost(roomId, user);
     }
