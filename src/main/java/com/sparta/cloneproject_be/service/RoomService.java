@@ -32,14 +32,16 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final ImageRepository imageRepository;
+    private final S3Uploader s3Uploader;
 
     //숙소 게시글 등록
     @Transactional
     public ResponseEntity<RoomResponseDto> createPost(RoomRequestDto requestDTO, List<String> imgPaths, User user) {
         if(!imgPaths.isEmpty()) {
-            Room room = new Room(requestDTO);
+            Room room = new Room(requestDTO, user);
             roomRepository.save(room);
 
+            // 이미지 업로드
             List<RoomImage> imgList = new ArrayList<>();
             for (String imgUrl : imgPaths) {
                 RoomImage roomImage = new RoomImage(imgUrl, room);
@@ -47,8 +49,7 @@ public class RoomService {
                 imgList.add(roomImage);
             }
             room.setImages(imgList);
-            RoomResponseDto responseDto = new RoomResponseDto(room);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new RoomResponseDto(room));
         } else {
             throw new CustomException(ErrorMessage.WRONG_INPUT_IMAGE);
         }
@@ -59,8 +60,8 @@ public class RoomService {
     public ResponseEntity<Map<String, List<RoomResponseDto>>> listPosts() {
         List<Room> rooms = roomRepository.findAll();
         List<RoomResponseDto> hostingList = new ArrayList<>();
-        for(Room post : rooms) {
-            hostingList.add(new RoomResponseDto(post));
+        for(Room room : rooms) {
+            hostingList.add(new RoomResponseDto(room));
         }
 
         Map<String, List<RoomResponseDto>> result = new HashMap<>();
@@ -73,7 +74,7 @@ public class RoomService {
     public ResponseEntity<RoomResponseDto> updatePost(Long roomId, RoomRequestDto requestDTO, User user) {
 
         // 게시글이 존재하는지 확인
-        Room room = isRoomExist(roomId);
+        Room room = checkRoomExist(roomId);
         // 게시글 작성자와 수정하려는 사용자가 같은치 체크
         if(checkAuthorIdMatch(room, user)){
             throw new CustomException(ErrorMessage.CANNOT_UPDATE_POST);
@@ -87,18 +88,25 @@ public class RoomService {
     @Transactional
     public ResponseEntity<String> deletePost(@PathVariable Long roomId, User user) {
         // 게시글이 존재하는지 확인
-        Room room = isRoomExist(roomId);
+        Room room = checkRoomExist(roomId);
         // 게시글 작성자와 삭제하려는 사용자가 같은지 체크
         if(checkAuthorIdMatch(room, user)) {
             throw new CustomException(ErrorMessage.CANNOT_DELETE_POST);
         }
+
+        // S3에 저장된 이미지 삭제.
+        List<RoomImage> imgList = imageRepository.findAllByRoom(room);
+        for (RoomImage img : imgList) {
+            s3Uploader.deleteFile(img.getImageUrl());
+        }
+
         roomRepository.delete(room);
         return ResponseEntity.status(HttpStatus.OK).body("게시글 식제 성공");
     }
 
 
     // id를 매개변수로 받아서 id에 대응되는 게시글이 존재하는지 체크하는 메서드
-    private Room isRoomExist(Long id){
+    private Room checkRoomExist(Long id){
         return roomRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorMessage.NON_EXIST_POST)
         );
@@ -106,7 +114,7 @@ public class RoomService {
 
     // 게시글과 게시글을 변경하려는 요청을 보낸 유저가 일치하는지 여부 체크 default return value : true
     private boolean checkAuthorIdMatch(Room room, User user){
-        if(room.getUser().getUsername().equals(user.getUsername()))
+        if(room.getUser().getUserId().equals(user.getUserId()))
             return false;
         return true;
     }
