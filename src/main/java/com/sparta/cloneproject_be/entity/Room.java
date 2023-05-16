@@ -53,9 +53,8 @@ public class Room {
     private User user;
 
     // 편의시설
-    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<RoomAmenities> roomAmenities = new ArrayList<>();
+    @ElementCollection
+    private List<String> roomAmenities = new ArrayList<>();
 
     // 이미지
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
@@ -63,9 +62,8 @@ public class Room {
     private List<RoomImage> images = new ArrayList<>();
 
     // 카테고리
-    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<RoomCategory> categories = new ArrayList<>();
+    @ElementCollection
+    private List<String> categories = new ArrayList<>();
 
     public Room(RoomRequestDto roomRequestDto, User user) {
         this.title = roomRequestDto.getTitle();
