@@ -72,18 +72,22 @@ public class Room {
         this.city = roomRequestDto.getCity();
         this.capacity = roomRequestDto.getCapacity();
         this.roomType = roomRequestDto.getRoomType();
+        this.roomAmenities = roomRequestDto.getAmenities();
+        this.categories = roomRequestDto.getCategories();
         this.expiredDate = roomRequestDto.getExpiredDate();
         this.user = user;
     }
 
-    public void update(RoomRequestDto roomRequestDto) {
+    public void update(RoomRequestDto roomRequestDto, List<RoomImage> images) {
         this.title = roomRequestDto.getTitle();
         this.price = roomRequestDto.getPrice();
         this.region = roomRequestDto.getRegion();
         this.city = roomRequestDto.getCity();
         this.capacity = roomRequestDto.getCapacity();
         this.roomType = roomRequestDto.getRoomType();
-        //this.roomAmenities = roomRequestDto.getAmenities().;
+        this.roomAmenities = roomRequestDto.getAmenities();
+        this.categories = roomRequestDto.getCategories();
         this.expiredDate = roomRequestDto.getExpiredDate();
+        this.images = images;
     }
 }

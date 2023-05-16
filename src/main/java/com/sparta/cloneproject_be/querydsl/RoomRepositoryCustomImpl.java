@@ -9,7 +9,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.cloneproject_be.entity.QRoom;
-import com.sparta.cloneproject_be.entity.QRoomAmenities;
 import com.sparta.cloneproject_be.entity.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,7 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     @Override
     public Page<Room> findRooms(int minPrice, int maxPrice, String region, List<String> amenities, String roomType, Pageable pageable) {
         QRoom room = QRoom.room;
-        QRoomAmenities roomAmenities = QRoomAmenities.roomAmenities;
+        //QRoomAmenities roomAmenities = QRoomAmenities.roomAmenities;
         //RoomAmenities 엔티티 = Room과 Amenity 사이의 연결 테이블
         //데이터베이스의 Room과 RoomAmenities 테이블과 매핑
 
@@ -52,16 +51,16 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
             builder.and(room.roomType.eq(roomType));
         }
         //편의시설 필터링
-        if (amenities != null && !amenities.isEmpty()) {
-            for (String amenity : amenities) {
-                builder.and(Expressions.asBoolean(true).isTrue()
-                        .and(JPAExpressions.selectOne()
-                                .from(roomAmenities)
-                                .where(roomAmenities.room.eq(room)
-                                        .and(roomAmenities.amenity.amenityName.eq(amenity)))
-                                .exists()));
-            }
-        }
+//        if (amenities != null && !amenities.isEmpty()) {
+//            for (String amenity : amenities) {
+//                builder.and(Expressions.asBoolean(true).isTrue()
+//                        .and(JPAExpressions.selectOne()
+//                                .from(roomAmenities)
+//                                .where(roomAmenities.room.eq(room)
+//                                        .and(roomAmenities.amenity.amenityName.eq(amenity)))
+//                                .exists()));
+//            }
+//        }
         //서브쿼리 : JPAExpressions.selectOne() ->쿼리 생성 메서드. selectOne() 반환할 결과 개수 1로 제한
         // .from(roomAmenities) -> 서브쿼리의 대상 테이블 지정
         // .where(roomAmenities.room.eq(room).and(roomAmenities.amenity.amenityName.eq(amenity)))

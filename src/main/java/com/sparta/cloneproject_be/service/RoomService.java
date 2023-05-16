@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -73,16 +74,35 @@ public class RoomService {
 
     //숙소 게시글 수정
     @Transactional
-    public ResponseEntity<RoomResponseDto> updatePost(Long roomId, RoomRequestDto requestDTO, User user) {
+    public ResponseEntity<RoomResponseDto> updatePost(Long roomId, RoomRequestDto requestDTO, List<String> imgPaths, User user) {
 
         // 게시글이 존재하는지 확인
         Room room = checkRoomExist(roomId);
+
         // 게시글 작성자와 수정하려는 사용자가 같은치 체크
         if(checkAuthorIdMatch(room, user)){
             throw new CustomException(ErrorMessage.CANNOT_UPDATE_POST);
         }
 
-        room.update(requestDTO);
+        if(!room.getImages().isEmpty()) {
+            // S3에 저장된 이미지 삭제.
+            List<RoomImage> imgList = imageRepository.findAllByRoom(room);
+            for (RoomImage img : imgList) {
+                s3Uploader.deleteFile(img.getImageUrl());
+                imageRepository.deleteById(img.getImageId());
+            }
+        }
+
+        // 이미지 업로드
+        List<RoomImage> imgList = new ArrayList<>();
+        for (String imgUrl : imgPaths) {
+            RoomImage roomImage = new RoomImage(imgUrl, room);
+            imageRepository.save(roomImage);
+            imgList.add(roomImage);
+        }
+        room.setImages(imgList);
+
+        room.update(requestDTO, imgList);
         return ResponseEntity.status(HttpStatus.OK).body(new RoomResponseDto(room));
     }
 
@@ -91,6 +111,7 @@ public class RoomService {
     public ResponseEntity<String> deletePost(@PathVariable Long roomId, User user) {
         // 게시글이 존재하는지 확인
         Room room = checkRoomExist(roomId);
+
         // 게시글 작성자와 삭제하려는 사용자가 같은지 체크
         if(checkAuthorIdMatch(room, user)) {
             throw new CustomException(ErrorMessage.CANNOT_DELETE_POST);
