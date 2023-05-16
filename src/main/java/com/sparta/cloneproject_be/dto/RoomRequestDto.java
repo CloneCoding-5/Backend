@@ -16,7 +16,8 @@ public class RoomRequestDto {
     private String city;
     private int capacity;
     private String roomType;
-    private List<RoomAmenities> amenities;
+    private List<String> amenities;
+    private List<String> categories;
     private List<MultipartFile> image;
     private LocalDate expiredDate;
 }
