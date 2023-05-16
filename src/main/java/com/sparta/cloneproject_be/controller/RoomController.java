@@ -43,9 +43,11 @@ public class RoomController {
     //숙소 게시글 수정 API
     @PutMapping("/host/{roomId}")
     public ResponseEntity<RoomResponseDto> updatePost(@PathVariable Long roomId,
-                                                      @RequestBody RoomRequestDto requestDTO,
+                                                      @RequestPart("content") RoomRequestDto requestDTO,
+                                                      @RequestPart("image") List<MultipartFile> multipartFile,
                                                       @AuthenticationPrincipal User user) {
-        return roomService.updatePost(roomId, requestDTO, user);
+        List<String> imgPaths = s3Uploader.upload(multipartFile);
+        return roomService.updatePost(roomId, requestDTO, imgPaths, user);
     }
 
     //숙소 게시글 삭제 API

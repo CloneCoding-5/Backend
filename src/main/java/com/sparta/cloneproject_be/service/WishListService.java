@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +33,7 @@ public class WishListService {
     // 위시리스트 등록
     @Transactional
     public ResponseEntity<MessageDto> createWishList(long roomId, WishListRequestDto requestDto, User user){
-        Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new CustomException(ErrorMessage.NON_EXIST_POST));
-
+        Room room = findRoomById(roomId);
         WishList wishList = new WishList(requestDto, user, room);
         wishListRepository.save(wishList);
         return ResponseEntity.ok().body(new MessageDto("위시리스트에 추가됐습니다."));
@@ -46,20 +43,45 @@ public class WishListService {
     @Transactional(readOnly = true)
     public ResponseEntity<Map<String, List<WishListResponseDto>>> getWishList(User user){
         List<WishList> wishLists = wishListRepository.findAllByUser(user);
-        List<WishListResponseDto> responseDto = wishLists.stream()
-                .map(WishListResponseDto::new)
-                .toList();
+        List<WishListResponseDto> responseDtoList = wishLists.stream()
+                .map(wishList -> {
+                    String image = wishList.getRoom().getImages().get(0).getImageUrl();
+                    String wishListName = wishList.getWishListName();
+                    Long roomId = wishList.getRoom().getRoomId();
+
+                    return new WishListResponseDto(image, wishListName, roomId);
+                })
+                .collect(Collectors.toList());
 
         Map<String, List<WishListResponseDto>> result = new HashMap<>();
-        result.put("wishList", responseDto);
-
+        result.put("wishList", responseDtoList);
         return ResponseEntity.ok().body(result);
     }
 
     // 위시리스트 삭제
     @Transactional
     public ResponseEntity<MessageDto> deleteWishList(long wishListId, User user) {
-        wishListRepository.deleteByIdAndUser(wishListId, user);
+        WishList wishList = findWishListById(wishListId);
+
+        if (!isYourWishList(wishList, user)){
+            throw new CustomException(ErrorMessage.CANNOT_DELETE_WISHLIST);
+        }
+        wishListRepository.delete(wishList);
         return ResponseEntity.ok().body(new MessageDto("위시리스트에서 삭제됐습니다."));
     }
+
+    public Room findRoomById(long roomId){
+        return roomRepository.findById(roomId).orElseThrow(
+                () -> new CustomException(ErrorMessage.NON_EXIST_POST));
+    }
+
+    public WishList findWishListById(long wishListId){
+        return wishListRepository.findById(wishListId).orElseThrow(
+                () -> new CustomException(ErrorMessage.NON_EXIST_WISHLIST));
+    }
+
+    public boolean isYourWishList(WishList wishList, User user) {
+        return wishList.getUser().equals(user);
+    }
+
 }

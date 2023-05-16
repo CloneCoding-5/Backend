@@ -18,8 +18,8 @@ public class MainPageService {
 
 
 
-    public Page<MainpageResponseDto> getRoomLists(int minPrice, int maxPrice, String region, List<String> amenities, String roomType, Pageable pageable) {
-        Page<Room> rooms = roomRepository.findRooms(minPrice, maxPrice, region, amenities, roomType, pageable);
+    public Page<MainpageResponseDto> getRoomLists(int minPrice, int maxPrice, String region, List<String> amenities, String roomType, List<String> categories,Pageable pageable) {
+        Page<Room> rooms = roomRepository.findRooms(minPrice, maxPrice, region, amenities, roomType, categories, pageable);
         return rooms.map(MainpageResponseDto::new);
     }
 //    public Page<MainpageResponseDto> getRoomLists(Pageable pageable) {
