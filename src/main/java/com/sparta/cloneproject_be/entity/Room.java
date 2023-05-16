@@ -13,6 +13,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -66,7 +67,7 @@ public class Room {
     @JsonManagedReference
     private List<RoomCategory> categories = new ArrayList<>();
 
-    public Room(RoomRequestDto roomRequestDto) {
+    public Room(RoomRequestDto roomRequestDto, User user) {
         this.title = roomRequestDto.getTitle();
         this.price = roomRequestDto.getPrice();
         this.region = roomRequestDto.getRegion();
@@ -74,6 +75,7 @@ public class Room {
         this.capacity = roomRequestDto.getCapacity();
         this.roomType = roomRequestDto.getRoomType();
         this.expiredDate = roomRequestDto.getExpiredDate();
+        this.user = user;
     }
 
     public void update(RoomRequestDto roomRequestDto) {
@@ -83,7 +85,7 @@ public class Room {
         this.city = roomRequestDto.getCity();
         this.capacity = roomRequestDto.getCapacity();
         this.roomType = roomRequestDto.getRoomType();
-        this.roomAmenities = roomRequestDto.getAmenities();
+        //this.roomAmenities = roomRequestDto.getAmenities().;
         this.expiredDate = roomRequestDto.getExpiredDate();
     }
 }
