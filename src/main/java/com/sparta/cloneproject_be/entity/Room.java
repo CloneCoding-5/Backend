@@ -65,7 +65,7 @@ public class Room {
     @ElementCollection
     private List<String> categories = new ArrayList<>();
 
-    public Room(RoomRequestDto roomRequestDto, User user) {
+    public Room(RoomRequestDto roomRequestDto, LocalDate expiredDate, User user) {
         this.title = roomRequestDto.getTitle();
         this.price = roomRequestDto.getPrice();
         this.region = roomRequestDto.getRegion();
@@ -74,7 +74,7 @@ public class Room {
         this.roomType = roomRequestDto.getRoomType();
         this.roomAmenities = roomRequestDto.getAmenities();
         this.categories = roomRequestDto.getCategories();
-        this.expiredDate = roomRequestDto.getExpiredDate();
+        this.expiredDate = expiredDate;
         this.user = user;
     }
 
