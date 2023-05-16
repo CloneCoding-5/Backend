@@ -1,8 +1,6 @@
 package com.sparta.cloneproject_be.dto;
 
-import com.sparta.cloneproject_be.entity.Amenity;
 import com.sparta.cloneproject_be.entity.Room;
-import com.sparta.cloneproject_be.entity.RoomAmenities;
 import com.sparta.cloneproject_be.entity.RoomImage;
 import lombok.Getter;
 import lombok.ToString;
@@ -34,7 +32,7 @@ public class RoomDetailResponseDto {
         this.price = room.getPrice();
         this.region = room.getRegion();
         this.capacity = room.getCapacity();
-        this.amenities = room.getRoomAmenities().stream().map(RoomAmenities::getAmenity).map(Amenity::getAmenityName).collect(Collectors.toList());
+        //this.amenities = room.getRoomAmenities().stream().map(RoomAmenities::getAmenity).map(Amenity::getAmenityName).collect(Collectors.toList());
         this.enableDates = enableDates;
         this.images = room.getImages().stream().map(RoomImage::getImageUrl).collect(Collectors.toList());
     }
