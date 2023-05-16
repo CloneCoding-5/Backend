@@ -9,7 +9,4 @@ import java.util.List;
 public interface WishListRepository extends JpaRepository<WishList, Long> {
 
     List<WishList> findAllByUser(User user);
-
-    // 삭제
-    void deleteByIdAndUser(Long wishListId, User user);
 }
