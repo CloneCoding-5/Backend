@@ -16,10 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -43,16 +43,15 @@ public class WishListService {
     @Transactional(readOnly = true)
     public ResponseEntity<Map<String, List<WishListResponseDto>>> getWishList(User user){
         List<WishList> wishLists = wishListRepository.findAllByUser(user);
-        List<WishListResponseDto> responseDtoList = new ArrayList<>();
+        List<WishListResponseDto> responseDtoList = wishLists.stream()
+                .map(wishList -> {
+                    String image = wishList.getRoom().getImages().get(0).getImageUrl();
+                    String wishListName = wishList.getWishListName();
+                    Long roomId = wishList.getRoom().getRoomId();
 
-        for (WishList wishList : wishLists) {
-            String image = wishList.getRoom().getImages().get(0).getImageUrl();
-            String wishListName = wishList.getWishListName();
-            Long roomId = wishList.getRoom().getRoomId();
-
-            WishListResponseDto responseDto = new WishListResponseDto(image, wishListName, roomId);
-            responseDtoList.add(responseDto);
-        }
+                    return new WishListResponseDto(image, wishListName, roomId);
+                })
+                .collect(Collectors.toList());
 
         Map<String, List<WishListResponseDto>> result = new HashMap<>();
         result.put("wishList", responseDtoList);
