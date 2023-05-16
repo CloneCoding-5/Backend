@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.entity;
 
+import com.sparta.cloneproject_be.dto.WishListRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -17,13 +18,21 @@ public class WishList {
     @Column(name = "wishListId")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "roomId")
     private Room room;
 
     private String wishListName;
+
+    public WishList(WishListRequestDto wishListRequestDto, User user, Room room){
+        this.wishListName = wishListRequestDto.getWishListName();
+        this.user = user;
+        this.room = room;
+    }
 }

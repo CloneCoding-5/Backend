@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +12,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -46,22 +46,25 @@ public class Room {
     private LocalDate expiredDate;
 
     // 호스트
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "userId")
     private User user;
 
     // 편의시설
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<RoomAmenities> roomAmenities = new ArrayList<>();
 
     // 이미지
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<RoomImage> images = new ArrayList<>();
 
     // 카테고리
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<RoomCategory> categories = new ArrayList<>();
-
 
     public Room(RoomRequestDto roomRequestDto) {
         this.title = roomRequestDto.getTitle();

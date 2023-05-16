@@ -1,5 +1,6 @@
 package com.sparta.cloneproject_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class RoomAmenities {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     private Room room;
 
     @ManyToOne
