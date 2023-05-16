@@ -31,44 +31,44 @@ dependencies {
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    // JPA
+// JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // Security
+// Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
 
-    // JWT
+// JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
-    // Web
+// Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // Lombok
+// Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // DevTools
+// DevTools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    // RDB
+// RDB
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // H2
-    // runtimeOnly 'com.h2database:h2'
+// H2
+// runtimeOnly 'com.h2database:h2'
 
-    // valid
+// valid
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // CORS
+// CORS
     implementation("org.mariadb.jdbc:mariadb-java-client:2.1.2")
 
-    // swagger-ui
+// swagger-ui
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
 
-    // S3
+// S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     // query dsql 사용하기 위한 dependency 주입
