@@ -2,7 +2,6 @@ package com.sparta.cloneproject_be.controller;
 
 
 import com.sparta.cloneproject_be.dto.MainpageResponseDto;
-import com.sparta.cloneproject_be.entity.Room;
 import com.sparta.cloneproject_be.service.MainPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,9 +32,10 @@ public class MainpageController {
                 @RequestParam(required = false) String region,
                 @RequestParam(required = false) List<String> amenities,
                 @RequestParam(required = false) String roomType,
+                @RequestParam(required = false) List<String> categories,
                 Pageable pageable){
 
-            Page<MainpageResponseDto> response = mainPageService.getRoomLists(minPrice, maxPrice, region, amenities, roomType, pageable);
+            Page<MainpageResponseDto> response = mainPageService.getRoomLists(minPrice, maxPrice, region, amenities, roomType, categories, pageable);
             return ResponseEntity.ok(response);
         }
     }

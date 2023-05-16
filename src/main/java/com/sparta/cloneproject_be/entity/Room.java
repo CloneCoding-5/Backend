@@ -87,7 +87,7 @@ public class Room {
         this.roomType = roomRequestDto.getRoomType();
         this.roomAmenities = roomRequestDto.getAmenities();
         this.categories = roomRequestDto.getCategories();
-        this.expiredDate = roomRequestDto.getExpiredDate();
+//        this.expiredDate = roomRequestDto.getExpiredDate();
         this.images = images;
     }
 }
