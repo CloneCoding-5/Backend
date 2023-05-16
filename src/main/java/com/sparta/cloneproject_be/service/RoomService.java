@@ -41,7 +41,8 @@ public class RoomService {
     @Transactional
     public ResponseEntity<RoomResponseDto> createPost(RoomRequestDto requestDTO, List<String> imgPaths, User user) {
         if(!imgPaths.isEmpty()) {
-            Room room = new Room(requestDTO, user);
+            LocalDate expiredDate = calcExpiredDate(requestDTO.getExpiredDate());
+            Room room = new Room(requestDTO, expiredDate, user);
             roomRepository.save(room);
 
             // 이미지 업로드
@@ -177,6 +178,28 @@ public class RoomService {
         if(room.getUser().getUserId().equals(user.getUserId()))
             return false;
         return true;
+    }
+    
+    // 숙소 등록 시 만기일자 계산
+    private LocalDate calcExpiredDate(int expiredDate) {
+        LocalDate result = LocalDate.now();
+        switch (expiredDate) {
+            case 1:
+                result = result.plusMonths(12L);
+                break;
+            case 2:
+                result = result.plusMonths(9L);
+                break;
+            case 3:
+                result = result.plusMonths(6L);
+                break;
+            case 4:
+                result = result.plusMonths(3L);
+                break;
+            default:
+                result = null;
+        }
+        return result;
     }
 
 }
