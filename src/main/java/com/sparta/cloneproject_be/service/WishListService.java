@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-
 public class WishListService {
 
     private final WishListRepository wishListRepository;
@@ -34,15 +33,22 @@ public class WishListService {
     @Transactional
     public ResponseEntity<MessageDto> createWishList(long roomId, WishListRequestDto requestDto, User user){
         Room room = findRoomById(roomId);
-        WishList wishList = new WishList(requestDto, user, room);
-        wishListRepository.save(wishList);
-        return ResponseEntity.ok().body(new MessageDto("위시리스트에 추가됐습니다."));
+        if (wishListRepository.findWishListByUserAndRoom(user, room).isEmpty()){
+            WishList wishList = new WishList(requestDto, user, room);
+            wishListRepository.save(wishList);
+            return ResponseEntity.ok().body(new MessageDto("위시리스트에 추가됐습니다."));
+        }
+        // 에어비앤비는 좋아요처럼 누르면 등록, 누르면 삭제인데 저희 스코프상 정해진 대로 DB에 중복 등록만 막아놓겠습니다.
+        return ResponseEntity.badRequest().body(new MessageDto("이미 위시리스트에 등록되어있습니다."));
     }
 
     // 위시리스트 조회
     @Transactional(readOnly = true)
     public ResponseEntity<Map<String, List<WishListResponseDto>>> getWishList(User user){
         List<WishList> wishLists = wishListRepository.findAllByUser(user);
+
+        // 이 부분이 비즈니스 로직인가? 프론트쪽에 보내주기 위한 용도인가 생각해봤을 때
+        // 필요한 값만 보내기위한 로직이라고 생각이 들기 때문에 Dto 에서 Stream 으로 변환한 후 내보내는 것이 맞다고 생각이 듭니다.
         List<WishListResponseDto> responseDtoList = wishLists.stream()
                 .map(wishList -> {
                     String image = wishList.getRoom().getImages().get(0).getImageUrl();
@@ -83,5 +89,4 @@ public class WishListService {
     public boolean isYourWishList(WishList wishList, User user) {
         return wishList.getUser().equals(user);
     }
-
 }
