@@ -4,7 +4,7 @@ import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import com.sparta.cloneproject_be.dto.RoomResponseDto;
 import com.sparta.cloneproject_be.entity.User;
 import com.sparta.cloneproject_be.service.RoomService;
-import com.sparta.cloneproject_be.util.S3Uploader;
+import com.sparta.cloneproject_be.util.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -23,14 +23,14 @@ import java.util.Map;
 public class RoomController {
 
     private final RoomService roomService;
-    private final S3Uploader s3Uploader;
+    private final S3Service s3Service;
 
     //숙소 게시글 등록 API
     @PostMapping(value = "/host", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<RoomResponseDto> createPost(@RequestPart("content") RoomRequestDto requestDTO,
                                                       @RequestPart("image") List<MultipartFile> multipartFile,
                                                       @AuthenticationPrincipal User user) {
-        List<String> imgPaths = s3Uploader.upload(multipartFile);
+        List<String> imgPaths = s3Service.upload(multipartFile);
         return roomService.createPost(requestDTO, imgPaths, user);
     }
 
@@ -46,7 +46,7 @@ public class RoomController {
                                                       @RequestPart("content") RoomRequestDto requestDTO,
                                                       @RequestPart("image") List<MultipartFile> multipartFile,
                                                       @AuthenticationPrincipal User user) {
-        List<String> imgPaths = s3Uploader.upload(multipartFile);
+        List<String> imgPaths = s3Service.upload(multipartFile);
         return roomService.updatePost(roomId, requestDTO, imgPaths, user);
     }
 

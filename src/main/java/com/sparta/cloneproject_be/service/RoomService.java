@@ -13,7 +13,7 @@ import com.sparta.cloneproject_be.exception.ErrorMessage;
 import com.sparta.cloneproject_be.repository.ImageRepository;
 import com.sparta.cloneproject_be.repository.ReserveRepository;
 import com.sparta.cloneproject_be.repository.RoomRepository;
-import com.sparta.cloneproject_be.util.S3Uploader;
+import com.sparta.cloneproject_be.util.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -34,7 +33,7 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final ImageRepository imageRepository;
-    private final S3Uploader s3Uploader;
+    private final S3Service s3Service;
     private final ReserveRepository reserveRepository;
 
     //숙소 게시글 등록
@@ -89,7 +88,7 @@ public class RoomService {
             // S3에 저장된 이미지 삭제.
             List<RoomImage> imgList = imageRepository.findAllByRoom(room);
             for (RoomImage img : imgList) {
-                s3Uploader.deleteFile(img.getImageUrl());
+                s3Service.deleteFile(img.getImageUrl());
                 imageRepository.deleteById(img.getImageId());
             }
         }
@@ -121,7 +120,7 @@ public class RoomService {
         // S3에 저장된 이미지 삭제.
         List<RoomImage> imgList = imageRepository.findAllByRoom(room);
         for (RoomImage img : imgList) {
-            s3Uploader.deleteFile(img.getImageUrl());
+            s3Service.deleteFile(img.getImageUrl());
         }
 
         roomRepository.delete(room);
