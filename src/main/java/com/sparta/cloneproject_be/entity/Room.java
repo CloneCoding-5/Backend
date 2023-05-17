@@ -52,9 +52,8 @@ public class Room {
     private User user;
 
     // 편의시설
-    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<RoomAmenities> roomAmenities = new ArrayList<>();
+    @ElementCollection
+    private List<String> roomAmenities = new ArrayList<>();
 
     // 이미지
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
@@ -62,21 +61,10 @@ public class Room {
     private List<RoomImage> images = new ArrayList<>();
 
     // 카테고리
-    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<RoomCategory> categories = new ArrayList<>();
+    @ElementCollection
+    private List<String> categories = new ArrayList<>();
 
-    public Room(RoomRequestDto roomRequestDto) {
-        this.title = roomRequestDto.getTitle();
-        this.price = roomRequestDto.getPrice();
-        this.region = roomRequestDto.getRegion();
-        this.city = roomRequestDto.getCity();
-        this.capacity = roomRequestDto.getCapacity();
-        this.roomType = roomRequestDto.getRoomType();
-        this.expiredDate = roomRequestDto.getExpiredDate();
-    }
-
-    public void update(RoomRequestDto roomRequestDto) {
+    public Room(RoomRequestDto roomRequestDto, LocalDate expiredDate, User user) {
         this.title = roomRequestDto.getTitle();
         this.price = roomRequestDto.getPrice();
         this.region = roomRequestDto.getRegion();
@@ -84,6 +72,21 @@ public class Room {
         this.capacity = roomRequestDto.getCapacity();
         this.roomType = roomRequestDto.getRoomType();
         this.roomAmenities = roomRequestDto.getAmenities();
-        this.expiredDate = roomRequestDto.getExpiredDate();
+        this.categories = roomRequestDto.getCategories();
+        this.expiredDate = expiredDate;
+        this.user = user;
+    }
+
+    public void update(RoomRequestDto roomRequestDto, List<RoomImage> images) {
+        this.title = roomRequestDto.getTitle();
+        this.price = roomRequestDto.getPrice();
+        this.region = roomRequestDto.getRegion();
+        this.city = roomRequestDto.getCity();
+        this.capacity = roomRequestDto.getCapacity();
+        this.roomType = roomRequestDto.getRoomType();
+        this.roomAmenities = roomRequestDto.getAmenities();
+        this.categories = roomRequestDto.getCategories();
+//        this.expiredDate = roomRequestDto.getExpiredDate();
+        this.images = images;
     }
 }

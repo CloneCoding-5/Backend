@@ -15,7 +15,7 @@ public enum ErrorMessage {
     NOT_IMAGE("jpg, jpeg, png 파일만 업로드 가능합니다.", 400),
     UNENROLLED_EMAIL("등록되지 않은 이메일입니다.", 400),
     BLANK_EXIST("입력되지 않은 값이 있습니다. 모든 항목을 작성해주세요.", 400),
-    WRONG_INPUT_IMAGE("이미지가 존재하지 않습니다.", 400),
+    WRONG_INPUT_IMAGE("이미지가 등록되지 않았습니다.", 400),
     OVER_ROOM_CAPACITY("숙박 가능 인원을 초과했습니다.", 400),
 
     // 401 Unauthorized
@@ -33,7 +33,6 @@ public enum ErrorMessage {
 
     // 500 INTERNAL SERVER ERROR
     IMAGE_UPLOAD_ERROR("이미지 업로드에 실패했습니다.", 500);
-
 
     private String message;
     private int statusCode;

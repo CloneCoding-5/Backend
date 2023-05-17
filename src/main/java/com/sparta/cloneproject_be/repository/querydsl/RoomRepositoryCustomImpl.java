@@ -1,24 +1,21 @@
-package com.sparta.cloneproject_be.querydsl;
+package com.sparta.cloneproject_be.repository.querydsl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.cloneproject_be.entity.QRoom;
-import com.sparta.cloneproject_be.entity.QRoomAmenities;
 import com.sparta.cloneproject_be.entity.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 import org.springframework.data.domain.Sort;
+
 import java.util.Iterator;
+import java.util.List;
 
 public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -30,21 +27,15 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 
     //여러 조건에 따라 Room 객체 검색. paginated 결과 반환
     @Override
-    public Page<Room> findRooms(int minPrice, int maxPrice, String region, List<String> amenities, String roomType, Pageable pageable) {
+    public Page<Room> findRooms(int minPrice, int maxPrice, String region, List<String> amenities, String roomType, String categories, Pageable pageable) {
         QRoom room = QRoom.room;
-        QRoomAmenities roomAmenities = QRoomAmenities.roomAmenities;
-        //RoomAmenities 엔티티 = Room과 Amenity 사이의 연결 테이블
-        //데이터베이스의 Room과 RoomAmenities 테이블과 매핑
 
         BooleanBuilder builder = new BooleanBuilder();
         //조건에 따라 동적 쿼리 구성
 
-        if (minPrice != 0) {
-            builder.and(room.price.goe(minPrice));  // greater or equal
-        }
-        if (maxPrice != 1000000) {
-            builder.and(room.price.loe(maxPrice));  //less or equal
-        }
+        builder.and(room.price.goe(minPrice));  // greater or equal
+        builder.and(room.price.loe(maxPrice));  //less or equal
+
         if (region != null) {
             builder.and(room.region.eq(region));
         }
@@ -54,20 +45,14 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
         //편의시설 필터링
         if (amenities != null && !amenities.isEmpty()) {
             for (String amenity : amenities) {
-                builder.and(Expressions.asBoolean(true).isTrue()
-                        .and(JPAExpressions.selectOne()
-                                .from(roomAmenities)
-                                .where(roomAmenities.room.eq(room)
-                                        .and(roomAmenities.amenity.amenityName.eq(amenity)))
-                                .exists()));
+                builder.and(room.roomAmenities.contains(amenity));
             }
         }
-        //서브쿼리 : JPAExpressions.selectOne() ->쿼리 생성 메서드. selectOne() 반환할 결과 개수 1로 제한
-        // .from(roomAmenities) -> 서브쿼리의 대상 테이블 지정
-        // .where(roomAmenities.room.eq(room).and(roomAmenities.amenity.amenityName.eq(amenity)))
-        // .exists() -> 서브쿼리 결과 존재 확인 -> true false
-        // 해당하는 편의시설을 모두 가진 Room 객체만 결과에 포함
 
+        //카테고리
+        if (categories != null) {
+            builder.and(room.categories.contains(categories));
+        }
 
         //실제 쿼리 생성
         //queryFactory.selectFrom -> room 테이블에서 데이터 선택,
