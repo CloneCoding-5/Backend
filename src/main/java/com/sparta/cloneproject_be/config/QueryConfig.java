@@ -1,4 +1,4 @@
-package com.sparta.cloneproject_be.querydsl;
+package com.sparta.cloneproject_be.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;

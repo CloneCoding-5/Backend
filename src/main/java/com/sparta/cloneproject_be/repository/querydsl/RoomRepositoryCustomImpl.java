@@ -1,4 +1,4 @@
-package com.sparta.cloneproject_be.querydsl;
+package com.sparta.cloneproject_be.repository.querydsl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -27,18 +27,15 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 
     //여러 조건에 따라 Room 객체 검색. paginated 결과 반환
     @Override
-    public Page<Room> findRooms(int minPrice, int maxPrice, String region, List<String> amenities, String roomType,List<String> categories, Pageable pageable) {
+    public Page<Room> findRooms(int minPrice, int maxPrice, String region, List<String> amenities, String roomType, String categories, Pageable pageable) {
         QRoom room = QRoom.room;
 
         BooleanBuilder builder = new BooleanBuilder();
         //조건에 따라 동적 쿼리 구성
 
-        if (minPrice != 0) {
-            builder.and(room.price.goe(minPrice));  // greater or equal
-        }
-        if (maxPrice != 1000000) {
-            builder.and(room.price.loe(maxPrice));  //less or equal
-        }
+        builder.and(room.price.goe(minPrice));  // greater or equal
+        builder.and(room.price.loe(maxPrice));  //less or equal
+
         if (region != null) {
             builder.and(room.region.eq(region));
         }
@@ -53,10 +50,8 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
         }
 
         //카테고리
-        if (categories != null && !categories.isEmpty()) {
-            for (String category : categories) {
-                builder.and(room.categories.contains(category));
-            }
+        if (categories != null) {
+            builder.and(room.categories.contains(categories));
         }
 
         //실제 쿼리 생성

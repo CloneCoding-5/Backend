@@ -32,7 +32,7 @@ public class RoomDetailResponseDto {
         this.price = room.getPrice();
         this.region = room.getRegion();
         this.capacity = room.getCapacity();
-        //this.amenities = room.getRoomAmenities().stream().map(RoomAmenities::getAmenity).map(Amenity::getAmenityName).collect(Collectors.toList());
+        this.amenities = room.getRoomAmenities();
         this.enableDates = enableDates;
         this.images = room.getImages().stream().map(RoomImage::getImageUrl).collect(Collectors.toList());
     }

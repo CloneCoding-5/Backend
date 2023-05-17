@@ -1,6 +1,7 @@
 package com.sparta.cloneproject_be.service;
 
 
+import com.sparta.cloneproject_be.dto.MainpageResponseDto;
 import com.sparta.cloneproject_be.dto.RoomDetailResponseDto;
 import com.sparta.cloneproject_be.dto.RoomRequestDto;
 import com.sparta.cloneproject_be.dto.RoomResponseDto;
@@ -16,6 +17,8 @@ import com.sparta.cloneproject_be.repository.RoomRepository;
 import com.sparta.cloneproject_be.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,6 +60,12 @@ public class RoomService {
         } else {
             throw new CustomException(ErrorMessage.WRONG_INPUT_IMAGE);
         }
+    }
+
+    //메인페이지 조회
+    public Page<MainpageResponseDto> getRoomLists(int minPrice, int maxPrice, String region, List<String> amenities, String roomType, String categories, Pageable pageable) {
+        Page<Room> rooms = roomRepository.findRooms(minPrice, maxPrice, region, amenities, roomType, categories, pageable);
+        return rooms.map(MainpageResponseDto::new);
     }
 
     //숙소 게시글 전체 조회
