@@ -72,6 +72,7 @@ public class WebSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://tube-project.com");
         config.addExposedHeader(JwtUtil.AUTHORIZATION_HEADER);
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
