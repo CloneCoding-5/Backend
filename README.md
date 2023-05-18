@@ -25,7 +25,7 @@
     - Front-end : JavaScript, HTML, CSS, React
     - Back-end : Spring boot, Java, QueryDSL, Spring Security, MySQL, Jwt, XSS Filter
     - Tools : Github, Git Action, AWS, S3, Swagger, Post Man
-- 영상 시연:
+- 영상 시연:https://youtu.be/UOTzn970yQ0
 - AWS 배포:
 - Github Repo: https://github.com/CloneCoding-5/Backend
 - Team Notion :[5조 클론 프로젝트](https://www.notion.so/5-e92b9ab3a66b47bb9c4a699cb7fd15e3)
