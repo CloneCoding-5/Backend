@@ -35,7 +35,8 @@
 https://www.figma.com/file/1qN4b5HRhBagh3I1rVtDJ3/%ED%95%AD%ED%95%B4-5%EC%A1%B0-%ED%81%B4%EB%A1%A0%EC%BD%94%EB%94%A9-AirBnb?type=design&node-id=0-1&t=b7V9nSAqkLtnCEKX-0
 
 ## ERD
-![스크린샷 2023-05-17 오후 8.00.02.png](..%2F..%2FDownloads%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-05-17%20%EC%98%A4%ED%9B%84%208.00.02.png)
+<img width="840" alt="스크린샷 2023-05-17 오후 8 00 02" src="https://github.com/CloneCoding-5/Backend/assets/111736036/9cbac583-1b48-4887-b84f-1d3d13d78147">
+
 
 
 ## API 명세서 
