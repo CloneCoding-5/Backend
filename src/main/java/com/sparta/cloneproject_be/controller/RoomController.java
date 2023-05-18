@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,12 +44,12 @@ public class RoomController {
     @GetMapping("/")
     public ResponseEntity<Page<MainpageResponseDto>> getRooms(
             @RequestParam(defaultValue = "0") int minPrice,
-            @RequestParam(defaultValue = "1000000") int maxPrice,
+            @RequestParam(defaultValue = "100000000") int maxPrice,
             @RequestParam(required = false) String region,
             @RequestParam(required = false) List<String> amenities,
             @RequestParam(required = false) String roomType,
             @RequestParam(required = false) String categories,
-            Pageable pageable){
+            @PageableDefault(size = 100) Pageable pageable){
 
         Page<MainpageResponseDto> response = roomService.getRoomLists(minPrice, maxPrice, region, amenities, roomType, categories, pageable);
         return ResponseEntity.ok(response);
