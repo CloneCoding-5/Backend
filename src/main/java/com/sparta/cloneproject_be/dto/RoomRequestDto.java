@@ -16,6 +16,5 @@ public class RoomRequestDto {
     private String roomType;
     private List<String> amenities;
     private List<String> categories;
-    private List<MultipartFile> image;
     private int expiredDate;
 }
